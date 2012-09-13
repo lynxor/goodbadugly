@@ -1,0 +1,22 @@
+extends base
+
+block title
+  title Posts
+
+
+block content
+  #table_holder
+    include gba_table
+
+  form(action='/post', method='post')
+    label(for='text')
+    textarea.text(name='post[text]')
+
+    label(for='type')
+    select.type(name='post[type]')
+      each type in types
+        option(value='#{type}')= type
+
+    input.btn(type='submit', value='submit')
+
+  script(src='/public#{asset_token}/posts_public.js')

@@ -1,0 +1,13 @@
+table.table.table-bordered
+  tbody
+    tr
+      each type in types
+        th= type
+    each row in rows
+      tr
+        each post in row
+          td
+            if post && post.text
+              p(style='width: 200px')= post.text
+              h4 by #{post.user}
+              a(href='/post/like/#{post._id}', style='padding-left: 10px') Like (#{post.likes.length})

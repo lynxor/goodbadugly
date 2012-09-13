@@ -1,0 +1,52 @@
+.changed {
+    background: red;
+}
+
+.slick-row.selected .cell-selection {
+    background-color: blue; /* show default selected row background */
+}
+
+.cell-selection {
+    border-right-color: silver;
+    border-right-style: solid;
+    background: blue;
+    color: gray;
+    text-align: right;
+    font-size: 10px;
+}
+
+.slick-cell-checkboxsel {
+    background: #f0f0f0;
+    border-right-color: silver;
+    border-right-style: solid;
+}
+.grid-div {
+    float: left;
+    width: 1000px;
+    height: 700px;
+}
+.grid-action-panel {
+    float: left;
+    height: 300px;
+    width: 300px;
+    padding-left: 20px;
+    margin-left: 20px;
+    border-color: #CCC;
+    border-width: 0.1em;
+    border-style: solid;
+}
+
+div.slick-cell.selected {
+    background-color: #87cefa;
+}
+
+#contextMenu {
+    background: #e1efc7;
+    border: 1px solid gray;
+    padding: 2px;
+    display: inline-block;
+    min-width: 100px;
+    -moz-box-shadow: 2px 2px 2px silver;
+    -webkit-box-shadow: 2px 2px 2px silver;
+    z-index: 99999;
+}

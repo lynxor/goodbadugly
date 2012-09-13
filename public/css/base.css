@@ -1,0 +1,107 @@
+#topnav ul li{
+    display: inline;
+    padding: .2em 1em;
+}
+
+
+
+#cellNoSelect {
+    margin-left: 10px;
+}
+
+.error {
+    color: red;
+}
+.success {
+    color: green;
+}
+.popform{
+    padding: 25px;
+}
+
+.navbar-inner{
+    height:38px;
+}
+.navbar-inner h2{
+    color: white;
+    float: left;
+}
+.navbar-inner h4{
+    color:white;
+}
+.navbar-inner .btn-primary a{
+    color: white;
+}
+.btn-primary a:hover{
+    color: white;
+    text-decoration: none;
+}
+
+.btn a {
+    color:black;
+}
+.btn a:hover{
+    text-decoration: none;
+}
+
+.logo {
+    width: 38px;
+    height: 33px;
+    padding-right:20px;
+    background: #000 url("../logo.png") no-repeat left top;
+    float: left;
+}
+
+.user {
+    color: #000;
+    float: right;
+}
+
+span.username {
+    color: lightblue;
+    margin-right:20px;
+}
+
+.navbar-inner .container {
+    margin-left: 100px;
+    float: left;
+}
+
+span.event {
+    padding-left: 40px;
+}
+
+.dsnav {
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
+
+.badge-large {
+    margin-top:15px;
+    margin-left:5px;
+    font-size: 24px;
+}
+a.badge-large {
+    padding-top:10px;
+    margin-top:10px;
+}
+
+.action-btn {
+    color: white;
+}
+.action-btn:hover {
+    color: #cccccc;
+}
+
+div.message {
+    width: 64px;
+    height: 64px;
+    padding-right:20px;
+    float:left;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#preview {
+    white-space: pre;
+}
