@@ -1,4 +1,4 @@
-## Cell Point
+## Good bad ugly 
 
 Installing
 ----------
