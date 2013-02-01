@@ -6,14 +6,11 @@ html
     include include/header
   body
 
-    div(class="navbar")
-      div(class="navbar-inner") 
-        .logo
-        h2 Good, bad & ugly
+    .navbar
+      .navbar-inner
         if admin
           .container
             ul.nav
-              li: a(href="/posts/today") Home
               if admin || dsclient
                  li.dropdown
                    a.dropdown-toggle(data-toggle="dropdown",href="#") Administration

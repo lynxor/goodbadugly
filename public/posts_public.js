@@ -13,6 +13,8 @@ function retrieveTable(){
 
 $(function(){
    // doPoll();
+
+    $(".accordion-body").first().addClass('in');
 });
 
 function doPoll(){

@@ -22,7 +22,7 @@ exports.on = function (providers) {
                         return {name: key, posts: grouped[key]};
                     });
 
-                    respond({groups:groups, types:types});
+                    respond({groups:_.sortBy(groups, "name"), types:types});
                 }
                 else {
                     respond({groups:[], types:types});

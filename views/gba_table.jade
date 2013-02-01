@@ -2,7 +2,8 @@
   each group in groups
     .accordion-group
       .accordion-heading
-        a.accordion-toggle('data-toggle'='collapse', 'data-parent'='#accordion1', href='##{group.name}')= group.name
+        a.accordion-toggle('data-toggle'='collapse', 'data-parent'='#accordion1', href='##{group.name}')
+          h4= group.name
       div(id='#{group.name}').accordion-body.collapse
         .accordion-inner
           ul
@@ -11,6 +12,8 @@
                 dt #{posto.user}
                 dd
                   p= posto.text
-                  a(href='/post/like/#{posto._id}') Like (#{posto.likes.length})
+              a.btn(href='/post/like/#{posto._id}')
+                i.icon-thumbs-up
+                span Like (#{posto.likes.length})
 
 
