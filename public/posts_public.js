@@ -12,7 +12,7 @@ function retrieveTable(){
 }
 
 $(function(){
-    doPoll();
+   // doPoll();
 });
 
 function doPoll(){

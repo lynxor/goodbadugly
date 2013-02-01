@@ -17,17 +17,15 @@ exports.on = function (providers) {
                 if (!err && posts && posts.length) {
                     var grouped = _.groupBy(posts, function (post) {
                         return post.type;
+                    }),
+                    groups = _.map( _(grouped).keys(), function(key){
+                        return {name: key, posts: grouped[key]};
                     });
-                    var separate = _.reduce(types, function(acc, it){
-                        var value = grouped[it] || [];
-                        acc.push(value);  //have to reduce otherwise lose ordering
-                        return acc;
-                    }, []);
-                    var zipped = _.zip.apply(null, separate);
-                    respond({rows:zipped, types:types});
+
+                    respond({groups:groups, types:types});
                 }
                 else {
-                    respond({rows:[], types:types});
+                    respond({groups:[], types:types});
                 }
             });
 
@@ -54,7 +52,8 @@ exports.on = function (providers) {
             postProvider.like(req.params.postId, req.user, function (err, docs) {
                 res.redirect("/posts/today");
             });
-        }
+        };
+
     return function (router) {
         router.get("/", a.isAuthenticated, listToday);
         router.get("/posts/today", a.isAuthenticated, listToday);
