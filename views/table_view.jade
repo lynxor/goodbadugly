@@ -1,0 +1,16 @@
+extends base
+
+block title
+  title Posts
+
+
+block content
+  h1 Posts
+
+  include include/changedate
+
+  #table_holder
+    include gba_table
+  script(src='/public#{asset_token}/table_view_public.js')
+
+

@@ -1,0 +1,11 @@
+#accordion1.accordion
+  each group in groups
+    .accordion-group
+      .accordion-heading
+        #header('data-parent'='#accordion1', href='##{group.name}', style='margin-left: 5px')
+          h4= group.name
+      div(id='#{group.name}').accordion-body
+        .accordion-inner
+          ul
+            each posto in group.posts
+              include post_include

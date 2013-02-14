@@ -191,7 +191,7 @@ exports.on = function (providers, roles, assetToken) {
         router.post("/admin/edit/:email", a.hasAnyRole("admin", "client"), save_user);
         router.get("/admin/delete/:email",a.hasAnyRole("admin", "client"), delete_user );
 
-        router.get("/profile/:email", a.hasAnyRole("admin", "supervisor", "client", "collector"), profile);
+        router.get("/profile/:email", a.hasAnyRole("admin"), profile);
 
 
         router.get("/user/changepassword/:email", a.hasAnyRole("admin", "supervisor", "client", "collector"), viewChangePassword);

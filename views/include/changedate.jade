@@ -1,0 +1,12 @@
+block scripts
+    script(src='/public#{asset_token}/vendor/bootstrap/datepicker/js/bootstrap-datepicker.js')
+    link(rel='stylesheet', href='/public#{asset_token}/vendor/bootstrap/datepicker/css/datepicker.css')
+
+div.well
+    h3 From #{from} to #{to}
+    input(class="from",value="#{from}") #{from}
+    input(class="to",value="#{to}")
+    a.btn.btn-primary#getStatement Change date
+    //input#changedate.btn.btn-primary(type='button', value='Get statement', onclick='changeDate()')
+
+script(src='/public#{asset_token}/changedate.js')

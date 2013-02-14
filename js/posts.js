@@ -8,6 +8,28 @@ var _ = require("underscore"),
     table_template = fs.readFileSync(__dirname + "/../views/gba_table.jade");
 
 exports.on = function (providers) {
+
+    function getTimesFromReq (req) {
+        var from,
+            to;
+        if (req.query.from) {
+            from = moment(req.query.from);
+        } else {
+            from = moment(new Date()).date(1).sod();
+        }
+        if (req.query.to) {
+            to = moment(req.query.to);
+        } else {
+            to = moment(from).add('months', 1).date(0).eod();
+        }
+        from = from.sod();
+        to = to.eod();
+        return {
+            from:from,
+            to:to
+        };
+    }
+
     var userProvider = providers.userProvider,
         postProvider = providers.postProvider,
         types = ["good", "bad", "ugly", "whatever"],
@@ -22,22 +44,53 @@ exports.on = function (providers) {
                         return {name: key, posts: grouped[key]};
                     });
 
-                    respond({groups:_.sortBy(groups, "name"), types:types});
+                    res.render("posts.jade", {groups:_.sortBy(groups, "name"), types:types});
                 }
                 else {
-                    respond({groups:[], types:types});
+                    res.render("posts.jade", {groups:[], types:types});
+                }
+            });
+
+
+        },
+        tableView = function (req, res) {
+
+            var dates = getTimesFromReq(req),
+                from = dates.from,
+                to = dates.to;
+
+            postProvider.retrieve(from, to, function (err, posts) {
+
+                if (!err && posts && posts.length) {
+                    var grouped = _.groupBy(posts, function (post) {
+                        return post.type;
+                    });
+                    var separate = _.reduce(types, function(acc, it){
+                        var value = grouped[it] || [];
+                        acc.push(value);  //have to reduce otherwise lose ordering
+                        return acc;
+                    }, []);
+                    var zipped = _.zip.apply(null, separate);
+                    respond({rows:zipped, types:types});
+                }
+                else {
+                    respond({rows:[], types:types});
                 }
             });
 
             function respond(data) {
+                data.from = moment(from).format("YYYY/MM/DD");
+                data.to = moment(to).format("YYYY/MM/DD");
+
                 if (!req.xhr) {
-                    res.render("posts.jade", data);
+                    res.render("table_view.jade", data);
                 } else {
                     var table = jade.compile(table_template, {})(data);
                     res.json({html: table});
                 }
             }
         },
+
         newPost = function (req, res) {
             var post = req.body.post;
             post.likes = [];
@@ -57,6 +110,7 @@ exports.on = function (providers) {
     return function (router) {
         router.get("/", a.isAuthenticated, listToday);
         router.get("/posts/today", a.isAuthenticated, listToday);
+        router.get("/posts/table_view", a.isAuthenticated, tableView);
         router.post("/post", a.isAuthenticated, newPost);
 
         router.get("/post/like/:postId", a.isAuthenticated, like);

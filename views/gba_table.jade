@@ -1,20 +1,18 @@
-#accordion1.accordion
-  each group in groups
-    .accordion-group
-      .accordion-heading
-        #header('data-parent'='#accordion1', href='##{group.name}', style='margin-left: 5px')
-          h4= group.name
-      div(id='#{group.name}').accordion-body
-        .accordion-inner
-          ul
-            each posto in group.posts
+table.table.table-bordered
+  thead
+    tr
+      each type in types
+        th= type
+  tbody
+    each row in rows
+      tr
+        each posto in row
+          td(scope='row', class='postcolumn')
+            if posto
               .well
                 dl
                   dt #{posto.user}
                   dd
                     p= posto.text
-                a.btn.btn-mini(href='/post/like/#{posto._id}')
-                  i.icon-thumbs-up
-                  span Like
                 if posto.likes.length
                   span Liked by #{posto.likes.join(", ")}
