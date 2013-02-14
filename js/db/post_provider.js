@@ -13,7 +13,7 @@ exports.PostProvider = function (db) {
             db.post.insert(post, callback);
         },
         like: function(postId, user, callback){
-            db.post.update({_id: new ObjectID(postId)}, {$addToSet: {likes: user.firstname + user.lastname} }, callback);
+            db.post.update({_id: new ObjectID(postId), user : {$ne: user.email}}, {$addToSet: {likes: user.email} }, callback);
         }
     };
 };

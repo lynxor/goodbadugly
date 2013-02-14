@@ -6,31 +6,22 @@ html
     include include/header
   body
 
-    .navbar
+    .navbar.navbar-fixed-bottom
       .navbar-inner
-        if admin
-          .container
-            ul.nav
-              if admin || dsclient
-                 li.dropdown
-                   a.dropdown-toggle(data-toggle="dropdown",href="#") Administration
-                     b.caret
-                   ul.dropdown-menu
-                     li: a(href="/admin") Users
-
-          .user
-            if user
-              span.username
-                a(href="/profile/#{user.email}") #{user.email}
-              .btn
-                a(href="/logout") Logout
-            else
-              h2
-                div(class="btn btn-primary")
-                  a(href="/login") Please login!
+        if user
+          block menu
+          ul.nav
+             li.dropdown
+               a.dropdown-toggle('data-toggle'="dropdown",href="#") Admin
+                 b.caret
+               ul.dropdown-menu
+                if admin
+                  li: a(href="/admin") Users
+                if user
+                  li: a(href="/profile/#{user.email}") Account
+                  li: a(href="/logout") Logout
 
     div(class="container")
-
       block content
 
   script

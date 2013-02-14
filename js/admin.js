@@ -80,6 +80,22 @@ exports.on = function (providers, roles, assetToken) {
 
             });
         },
+        delete_user = function(req, res) {
+            var user = req.user,
+                delEmail = req.params.email;
+            userProvider.retrieveByEmail(delEmail, function(err, delUser){
+                if(user.email === delEmail){
+                    res.render('errors/500.jade', {error: "Cannot delete your own user"});
+                } else if(delUser.role.name === "admin" && user.role.name !== "admin"){
+                    res.render('errors/500.jade', {error: "Cannot delete admin user"});
+                }
+                else{
+                    userProvider.remove({email: delEmail}, function(err, blah){
+                        res.redirect("/admin");
+                    });
+                }
+            })
+        },
         edit_user_client = function (req, res, next) {
             userProvider.retrieveAll(function (err, users) {
                 users = _(users).filter(function (x) {
@@ -173,6 +189,7 @@ exports.on = function (providers, roles, assetToken) {
 
         router.post("/admin/add", a.hasAnyRole("admin", "client"), add_user);
         router.post("/admin/edit/:email", a.hasAnyRole("admin", "client"), save_user);
+        router.get("/admin/delete/:email",a.hasAnyRole("admin", "client"), delete_user );
 
         router.get("/profile/:email", a.hasAnyRole("admin", "supervisor", "client", "collector"), profile);
 

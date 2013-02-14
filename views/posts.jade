@@ -8,10 +8,6 @@ block content
   #table_holder
     include gba_table
 
-  a.btn.btn-primary('data-toggle'='modal', role='button', href='#post_modal')
-   i.icon-plus-sign.icon-white
-   span Post
-
   form(action='/post', method='post')
     #post_modal.modal.hide.fade(tabindex="-1", role='dialog', 'aria-labelledby'='post_modal_label', 'aria-hidden'='true')
       .modal-header
@@ -30,4 +26,10 @@ block content
           button.btn('data-dismiss'='modal', 'aria-hidden'='true') Close
           input.btn.btn-primary(type='submit', value='submit')
 
-  script(src='/public#{asset_token}/posts_public.js')
+    script(src='/public#{asset_token}/posts_public.js')
+
+block menu
+   a.btn.btn-primary('data-toggle'='modal', role='button', href='#post_modal')
+    i.icon-plus-sign.icon-white
+    span Post
+

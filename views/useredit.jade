@@ -15,6 +15,10 @@ block content
           a(href='/admin/edit/#{u.email}') #{u.email}
   
   h1 User - #{userToEdit.email}
+    a.btn.btn-danger(href='/admin/delete/#{userToEdit.email}', onclick='if(!confirm("Are you sure you want to delete this user?")) return false;', style='margin-left: 10px;')
+          i.icon-white.icon-trash
+          span Delete
+
   form#useredit(method='post', action='/admin/edit/#{userToEdit.email}')
 
     h2 Details
