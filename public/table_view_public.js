@@ -14,7 +14,7 @@ function retrieveTable() {
 }
 
 $(function () {
-    if ( window.location.pathname === "/posts/table_view/" || window.location.pathname === "/posts/table_view"){
+    if ( window.location.search === ""){
         doPoll();
     }
 });
