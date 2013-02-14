@@ -15,12 +15,12 @@ exports.on = function (providers) {
         if (req.query.from) {
             from = moment(req.query.from);
         } else {
-            from = moment(new Date()).date(1).sod();
+            from = moment().sod();
         }
         if (req.query.to) {
             to = moment(req.query.to);
         } else {
-            to = moment(from).add('months', 1).date(0).eod();
+            to = moment(from).eod();
         }
         from = from.sod();
         to = to.eod();

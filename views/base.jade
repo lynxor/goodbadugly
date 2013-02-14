@@ -6,7 +6,7 @@ html
     include include/header
   body
 
-    .navbar.navbar-fixed-bottom
+    .navbar
       .navbar-inner
         if user
           a.brand(href='/', style='margin-left: 3px;')
@@ -22,8 +22,8 @@ html
                ul.dropdown-menu
                 if admin
                   li: a(href="/admin") Users
-                  li: a(href='/posts/table_view') Table View
                 if user
+                  li: a(href='/posts/table_view') Table View
                   li: a(href="/logout") Logout
 
     div(class="container")

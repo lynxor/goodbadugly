@@ -19,7 +19,7 @@ block content
           textarea.text(name='post[text]')
 
           label(for='type')
-          select.type(name='post[type]')
+          select.type(name='post[type]', style='width: auto;')
             each type in types
               option(value='#{type}')= type
         .modal-footer
