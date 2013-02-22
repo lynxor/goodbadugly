@@ -108,6 +108,11 @@ exports.on = function (providers) {
             postProvider.like(req.params.postId, req.user, function (err, docs) {
                 res.redirect("/posts/today");
             });
+        },
+        clearToday = function(req, res){
+            postProvider.clearToday(function(){
+                res.redirect("/posts/today");
+            });
         };
 
     return function (router) {
@@ -119,5 +124,8 @@ exports.on = function (providers) {
         router.post("/post/nostyle", a.isAuthenticated, newPostF('/nostyle'));
 
         router.get("/post/like/:postId", a.isAuthenticated, like);
+
+        //admin functions
+        router.get("/posts/clear-today", a.hasRole("admin"), clearToday);
     };
 };
