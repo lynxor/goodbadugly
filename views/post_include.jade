@@ -9,7 +9,7 @@
       i.icon-thumbs-up
       span Like
   if posto.likes && posto.likes.length
-    span Liked by #{posto.likes.join(", ")}
+    span.like Liked by #{posto.likes.join(", ")}
 
   br
 
@@ -18,4 +18,4 @@
           i.icon-thumbs-up
           span Dislike
   if posto.dislikes && posto.dislikes.length
-    span Disliked by #{posto.dislikes.join(", ")}
+    span.dislike Disliked by #{posto.dislikes.join(", ")}

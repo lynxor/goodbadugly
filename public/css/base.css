@@ -105,3 +105,14 @@ div.message {
 #preview {
     white-space: pre;
 }
+
+.like{
+  color: green;
+  font-style: italic;
+}
+
+
+.dislike{
+  color: orangered;
+  font-style: italic;
+}
