@@ -3,9 +3,19 @@
     dt #{posto.user}
     dd
       p= posto.text
-  if user.email !== posto.user
+
+  if user.email !== posto.user && ( ( posto.likes || [] ).indexOf(user.email) === -1) && ( ( posto.dislikes || [] ).indexOf(user.email) === -1)
     a.btn.btn-mini(href='/post/like/#{posto._id}')
       i.icon-thumbs-up
       span Like
-  if posto.likes.length
+  if posto.likes && posto.likes.length
     span Liked by #{posto.likes.join(", ")}
+
+  br
+
+  if user.email !== posto.user && ( ( posto.dislikes || [] ).indexOf(user.email) === -1) && ( ( posto.likes || [] ).indexOf(user.email) === -1)
+    a.btn.btn-mini(href='/post/dislike/#{posto._id}')
+          i.icon-thumbs-up
+          span Dislike
+  if posto.dislikes && posto.dislikes.length
+    span Disliked by #{posto.dislikes.join(", ")}

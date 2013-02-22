@@ -16,6 +16,9 @@ exports.PostProvider = function (db) {
         like: function(postId, user, callback){
             db.post.update({_id: new ObjectID(postId), user : {$ne: user.email}}, {$addToSet: {likes: user.email} }, callback);
         },
+        dislike: function(postId, user, callback){
+            db.post.update({_id: new ObjectID(postId), user : {$ne: user.email}}, {$addToSet: {dislikes: user.email} }, callback);
+        },
         clearToday: function(callback){
             var from = moment().sod(),
                 to = moment().eod();

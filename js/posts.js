@@ -109,6 +109,11 @@ exports.on = function (providers) {
                 res.redirect("/posts/today");
             });
         },
+        dislike = function (req, res) {
+            postProvider.dislike(req.params.postId, req.user, function (err, docs) {
+                res.redirect("/posts/today");
+            });
+        },
         clearToday = function(req, res){
             postProvider.clearToday(function(){
                 res.redirect("/posts/today");
@@ -124,6 +129,7 @@ exports.on = function (providers) {
         router.post("/post/nostyle", a.isAuthenticated, newPostF('/nostyle'));
 
         router.get("/post/like/:postId", a.isAuthenticated, like);
+        router.get("/post/dislike/:postId", a.isAuthenticated, dislike);
 
         //admin functions
         router.get("/posts/clear-today", a.hasRole("admin"), clearToday);
