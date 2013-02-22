@@ -9,7 +9,7 @@ var _ = require("underscore"),
 
 exports.on = function (providers) {
 
-    function getTimesFromReq (req) {
+    function getTimesFromReq(req) {
         var from,
             to;
         if (req.query.from) {
@@ -38,12 +38,12 @@ exports.on = function (providers) {
 
                 if (!err && posts && posts.length) {
                     var grouped = _.groupBy(posts, function (post) {
-                        return post.type;
-                    }),
-                    groups = _.map( _(grouped).keys(), function(key){
-                        var posts = _.sortBy(grouped[key], 'date' );
-                        return {name: key, posts: posts};
-                    });
+                            return post.type;
+                        }),
+                        groups = _.map(_(grouped).keys(), function (key) {
+                            var posts = _.sortBy(grouped[key], 'date');
+                            return {name:key, posts:posts};
+                        });
 
                     res.render("posts.jade", {groups:_.sortBy(groups, "name"), types:types});
                 }
@@ -53,6 +53,9 @@ exports.on = function (providers) {
             });
 
 
+        },
+        nostyle = function (req, res) {
+            res.render("nostyle.jade", {types:types});
         },
         tableView = function (req, res) {
 
@@ -66,8 +69,8 @@ exports.on = function (providers) {
                     var grouped = _.groupBy(posts, function (post) {
                         return post.type;
                     });
-                    _.each( _(grouped).keys(), function(key){
-                        grouped[key] = _.sortBy(grouped[key], 'date' );
+                    _.each(_(grouped).keys(), function (key) {
+                        grouped[key] = _.sortBy(grouped[key], 'date');
                     });
 
                     respond({rows:grouped, types:types});
@@ -85,20 +88,21 @@ exports.on = function (providers) {
                     res.render("table_view.jade", data);
                 } else {
                     var table = jade.compile(table_template, {})(data);
-                    res.json({html: table});
+                    res.json({html:table});
                 }
             }
         },
+        newPostF = function (redirectUrl) {
+            return function (req, res) {
+                var post = req.body.post;
+                post.likes = [];
+                post.date = new Date();
+                post.user = "" + req.user.email;
 
-        newPost = function (req, res) {
-            var post = req.body.post;
-            post.likes = [];
-            post.date = new Date();
-            post.user = "" + req.user.email;
-
-            postProvider.insert(post, function (err, docs) {
-                res.redirect("/posts/today");
-            });
+                postProvider.insert(post, function (err, docs) {
+                    res.redirect(redirectUrl);
+                });
+            };
         },
         like = function (req, res) {
             postProvider.like(req.params.postId, req.user, function (err, docs) {
@@ -109,8 +113,10 @@ exports.on = function (providers) {
     return function (router) {
         router.get("/", a.isAuthenticated, listToday);
         router.get("/posts/today", a.isAuthenticated, listToday);
+        router.get("/nostyle", a.isAuthenticated, nostyle);
         router.get("/posts/table_view", a.isAuthenticated, tableView);
-        router.post("/post", a.isAuthenticated, newPost);
+        router.post("/post", a.isAuthenticated, newPostF('/posts/today'));
+        router.post("/post/nostyle", a.isAuthenticated, newPostF('/nostyle'));
 
         router.get("/post/like/:postId", a.isAuthenticated, like);
     };

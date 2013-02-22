@@ -1,0 +1,19 @@
+extends base
+
+block title
+  title Posts
+
+
+block content
+  form(action='/post/nostyle', method='post')
+    h3 Add a post
+    #error(style='display: none')
+    label(for='post_text')
+    textarea#post_text.text(name='post[text]')
+
+    label(for='type')
+    select.type(name='post[type]', style='width: auto;')
+      each type in types
+        option(value='#{type}')= type
+
+    input#postButton(type='submit', value='submit')
