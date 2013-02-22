@@ -80,17 +80,17 @@ exports.on = function (providers, roles, assetToken) {
 
             });
         },
-        delete_user = function(req, res) {
+        delete_user = function (req, res) {
             var user = req.user,
                 delEmail = req.params.email;
-            userProvider.retrieveByEmail(delEmail, function(err, delUser){
-                if(user.email === delEmail){
-                    res.render('errors/500.jade', {error: "Cannot delete your own user"});
-                } else if(delUser.role.name === "admin" && user.role.name !== "admin"){
-                    res.render('errors/500.jade', {error: "Cannot delete admin user"});
+            userProvider.retrieveByEmail(delEmail, function (err, delUser) {
+                if (user.email === delEmail) {
+                    res.render('errors/500.jade', {error:"Cannot delete your own user"});
+                } else if (delUser.role.name === "admin" && user.role.name !== "admin") {
+                    res.render('errors/500.jade', {error:"Cannot delete admin user"});
                 }
-                else{
-                    userProvider.remove({email: delEmail}, function(err, blah){
+                else {
+                    userProvider.remove({email:delEmail}, function (err, blah) {
                         res.redirect("/admin");
                     });
                 }
@@ -122,42 +122,53 @@ exports.on = function (providers, roles, assetToken) {
             });
         },
         changePassword = function (req, res) {
-            var newPwd = req.body.newpassword,
-                repeat = req.body.repeat,
-                oldPwd = req.body.oldpassword;
+            if (req.user.email === req.params.email) {
+                var newPwd = req.body.newpassword,
+                    repeat = req.body.repeat,
+                    oldPwd = req.body.oldpassword;
 
-            userProvider.retrieve(req.params.email, oldPwd, function (err, theuser) {
-                if (!err && theuser) {
+                userProvider.retrieve(req.params.email, oldPwd, function (err, theuser) {
+                    if (!err && theuser) {
 
-                    if (newPwd !== repeat) {
-                        req.flash("error", "New passwords do not match");
-                        res.render("change_password.jade", {userToEdit:theuser});
-                    } else if (newPwd.length < 7) {
-                        req.flash("error", "Password must be at least 7 characters long");
-                        res.render("change_password.jade", {userToEdit:theuser});
-                    } else {
-                        userProvider.changePassword(req.params.email, newPwd, function (err, docs) {
-                            if (!err && docs) {
-                                req.flash("info", "Password changed successfully");
-                                res.render("profile.jade", {userToEdit:theuser, roles:roleSelects(req, theuser)});
-                            }
-                        });
+                        if (newPwd !== repeat) {
+                            req.flash("error", "New passwords do not match");
+                            res.render("change_password.jade", {userToEdit:theuser});
+                        } else if (newPwd.length < 7) {
+                            req.flash("error", "Password must be at least 7 characters long");
+                            res.render("change_password.jade", {userToEdit:theuser});
+                        } else {
+                            userProvider.changePassword(req.params.email, newPwd, function (err, docs) {
+                                if (!err && docs) {
+                                    req.flash("info", "Password changed successfully");
+                                    res.render("profile.jade", {userToEdit:theuser, roles:roleSelects(req, theuser)});
+                                }
+                            });
+
+                        }
 
                     }
+                    else {
+                        userProvider.retrieveByEmail(req.params.email, function (err, theuser) {
+                            req.flash("error", "Invalid password");
+                            res.render("change_password.jade", {userToEdit:theuser});
+                        });
+                    }
+                });
+            }
+            else {
+                res.render('errors/404.jade')
+            }
 
-                }
-                else {
-                    userProvider.retrieveByEmail(req.params.email, function (err, theuser) {
-                        req.flash("error", "Invalid password");
-                        res.render("change_password.jade", {userToEdit:theuser});
-                    });
-                }
-            });
         },
         viewChangePassword = function (req, res) {
-            userProvider.retrieveByEmail(req.params.email, function (err, theuser) {
-                res.render("change_password.jade", {userToEdit:theuser});
-            });
+            if (req.user.email === req.params.email) {
+                userProvider.retrieveByEmail(req.params.email, function (err, theuser) {
+
+                    res.render("change_password.jade", {userToEdit:theuser});
+                });
+            } else {
+                res.render('errors/404.jade')
+            }
         };
 
 
@@ -189,12 +200,12 @@ exports.on = function (providers, roles, assetToken) {
 
         router.post("/admin/add", a.hasAnyRole("admin", "client"), add_user);
         router.post("/admin/edit/:email", a.hasAnyRole("admin", "client"), save_user);
-        router.get("/admin/delete/:email",a.hasAnyRole("admin", "client"), delete_user );
+        router.get("/admin/delete/:email", a.hasAnyRole("admin", "client"), delete_user);
 
         router.get("/profile/:email", a.hasAnyRole("admin"), profile);
 
 
-        router.get("/user/changepassword/:email", a.hasAnyRole("admin", "supervisor", "client", "collector"), viewChangePassword);
-        router.post("/user/changepassword/:email", a.hasAnyRole("admin", "supervisor", "client", "collector"), changePassword);
+        router.get("/user/changepassword/:email", a.isAuthenticated, viewChangePassword);
+        router.post("/user/changepassword/:email", a.isAuthenticated, changePassword);
     };
 };

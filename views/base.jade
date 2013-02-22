@@ -24,6 +24,7 @@ html
                   li: a(href="/admin") Users
                 if user
                   li: a(href='/posts/table_view') Table View
+                  li: a(href='/user/changepassword/#{user.email}') Change password
                   li: a(href="/logout") Logout
 
     div(class="container")
