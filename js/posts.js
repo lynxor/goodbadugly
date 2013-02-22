@@ -41,7 +41,8 @@ exports.on = function (providers) {
                         return post.type;
                     }),
                     groups = _.map( _(grouped).keys(), function(key){
-                        return {name: key, posts: grouped[key]};
+                        var posts = _.sortBy(grouped[key], 'date' );
+                        return {name: key, posts: posts};
                     });
 
                     res.render("posts.jade", {groups:_.sortBy(groups, "name"), types:types});
@@ -65,13 +66,11 @@ exports.on = function (providers) {
                     var grouped = _.groupBy(posts, function (post) {
                         return post.type;
                     });
-                    var separate = _.reduce(types, function(acc, it){
-                        var value = grouped[it] || [];
-                        acc.push(value);  //have to reduce otherwise lose ordering
-                        return acc;
-                    }, []);
-                    var zipped = _.zip.apply(null, separate);
-                    respond({rows:zipped, types:types});
+                    _.each( _(grouped).keys(), function(key){
+                        grouped[key] = _.sortBy(grouped[key], 'date' );
+                    });
+
+                    respond({rows:grouped, types:types});
                 }
                 else {
                     respond({rows:[], types:types});

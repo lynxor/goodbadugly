@@ -1,25 +1,30 @@
-function handleResults(html){
-    console.log("Some new html gottens");
-    $("#table_holder").html( html);
-}
-
-function retrieveTable(){
-    var url = '/posts/today';
-    function success(data, textStatus, jqXHR){
-        handleResults(data.html);
-    }
-    $.get(url, {}, success);
-}
-
 $(function(){
-   // doPoll();
+    var pb$ = $("#postButton"),
+        postText$ = $("#post_text");
+    pb$.click(function (e) {
+        if (pb$.hasClass('disabled')) {
+            e.preventDefault();
+            return false;
+        } else if (validateNewPost()) {
+            pb$.addClass("disabled");
+            return true;
+        } else{
+            return false;
+        }
+    });
 
-   // $(".accordion-body").first().addClass('in');
+    postText$.change(validateNewPost);
 });
 
-function doPoll(){
-    setTimeout(function(){
-        retrieveTable();
-        doPoll();
-    }, 1000);
+function validateNewPost() {
+    var postValue = $("#post_text").val(),
+        err$ = $("#error");
+    if (postValue && postValue !== "") {
+        err$.hide();
+        return true;
+    } else {
+        err$.show();
+        err$.html("<strong>Error: </strong> Please provide a post body");
+        return false;
+    }
 }

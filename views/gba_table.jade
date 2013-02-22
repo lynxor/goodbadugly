@@ -4,15 +4,16 @@ table.table.table-bordered
       each type in types
         th= type
   tbody
-    each row in rows
-      tr
-        each posto in row
-          td(scope='row', class='postcolumn')
-            if posto
-              .well
-                dl
-                  dt #{posto.user}
-                  dd
-                    p= posto.text
-                if posto.likes.length
-                  span Liked by #{posto.likes.join(", ")}
+    tr
+      each col in rows
+        td(scope='row', class='postcolumn')
+          ul.unstyled
+            each posto in col
+              if posto
+                div.well(style='padding: 4px; margin: 3px; line-height: 10px;min-height: 10px;')
+                  dl
+                    dt(style='line-height: 15px;') #{posto.user}
+                    dd(style='line-height: 15px;')
+                      p= posto.text
+                  if posto.likes.length
+                    span Liked by #{posto.likes.join(", ")}
