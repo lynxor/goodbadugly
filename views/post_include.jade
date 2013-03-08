@@ -15,7 +15,7 @@
 
   if user.email !== posto.user && ( ( posto.dislikes || [] ).indexOf(user.email) === -1) && ( ( posto.likes || [] ).indexOf(user.email) === -1)
     a.btn.btn-mini(href='/post/dislike/#{posto._id}')
-          i.icon-thumbs-up
-          span Dislike
+      i.icon-thumbs-up
+      span Dislike
   if posto.dislikes && posto.dislikes.length
     span.dislike Disliked by #{posto.dislikes.join(", ")}

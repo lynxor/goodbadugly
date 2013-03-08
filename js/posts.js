@@ -69,7 +69,7 @@ exports.on = function (providers) {
                     var grouped = _.groupBy(posts, function (post) {
                         return post.type;
                     });
-                    _.each(_(grouped).keys(), function (key) {
+                    _.each(types, function (key) {
                         grouped[key] = _.sortBy(grouped[key], 'date');
                     });
 

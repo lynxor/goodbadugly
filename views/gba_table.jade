@@ -5,10 +5,10 @@ table.table.table-bordered
         th= type
   tbody
     tr
-      each col in rows
+      each type in types
         td(scope='row', class='postcolumn')
           ul.unstyled
-            each posto in col
+            each posto in rows[type]
               if posto
                 div.well(style='padding: 4px; margin: 3px; line-height: 10px;min-height: 10px;')
                   dl
