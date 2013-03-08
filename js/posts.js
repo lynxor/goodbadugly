@@ -5,6 +5,7 @@ var _ = require("underscore"),
     moment = require("moment"),
     jade = require("jade"),
     fs = require("fs"),
+    ObjectID = require('mongodb').ObjectID,
     table_template = fs.readFileSync(__dirname + "/../views/gba_table.jade");
 
 exports.on = function (providers) {
@@ -32,24 +33,27 @@ exports.on = function (providers) {
 
     var userProvider = providers.userProvider,
         postProvider = providers.postProvider,
-        types = ["good", "bad", "ugly", "whatever"],
-        listToday = function (req, res) {
-            postProvider.retrieve(moment().sod(), moment().eod(), function (err, posts) {
+        sessionProvider = providers.sessionProvider,
+        listSession = function (req, res) {
+            sessionProvider.retrieve(req.params.sessionId, function (err, session) {
+                var types = session.types;
+                postProvider.retrieve(req.params.sessionId, function (err, posts) {
 
-                if (!err && posts && posts.length) {
-                    var grouped = _.groupBy(posts, function (post) {
-                            return post.type;
-                        }),
-                        groups = _.map(_(grouped).keys(), function (key) {
-                            var posts = _.sortBy(grouped[key], 'date');
-                            return {name:key, posts:posts};
-                        });
+                    if (!err && posts && posts.length) {
+                        var grouped = _.groupBy(posts, function (post) {
+                                return post.type;
+                            }),
+                            groups = _.map(_(grouped).keys(), function (key) {
+                                var posts = _.sortBy(grouped[key], 'date');
+                                return {name:key, posts:posts};
+                            });
 
-                    res.render("posts.jade", {groups:_.sortBy(groups, "name"), types:types});
-                }
-                else {
-                    res.render("posts.jade", {groups:[], types:types});
-                }
+                        res.render("posts.jade", {groups:_.sortBy(groups, "name"), types:types, session: session});
+                    }
+                    else {
+                        res.render("posts.jade", {groups:[], types:types, session: session});
+                    }
+                });
             });
 
 
@@ -58,32 +62,27 @@ exports.on = function (providers) {
             res.render("nostyle.jade", {types:types});
         },
         tableView = function (req, res) {
+            sessionProvider.retrieve(req.params.sessionId, function (err, session) {
+                var types = session.types;
+                postProvider.retrieve(req.params.sessionId, function (err, posts) {
 
-            var dates = getTimesFromReq(req),
-                from = dates.from,
-                to = dates.to;
+                    if (!err && posts && posts.length) {
+                        var grouped = _.groupBy(posts, function (post) {
+                            return post.type;
+                        });
+                        _.each(types, function (key) {
+                            grouped[key] = _.sortBy(grouped[key], 'date');
+                        });
 
-            postProvider.retrieve(from, to, function (err, posts) {
-
-                if (!err && posts && posts.length) {
-                    var grouped = _.groupBy(posts, function (post) {
-                        return post.type;
-                    });
-                    _.each(types, function (key) {
-                        grouped[key] = _.sortBy(grouped[key], 'date');
-                    });
-
-                    respond({rows:grouped, types:types});
-                }
-                else {
-                    respond({rows:[], types:types});
-                }
+                        respond({rows:grouped, types:types, session: session});
+                    }
+                    else {
+                        respond({rows:[], types:types, session: session});
+                    }
+                });
             });
 
             function respond(data) {
-                data.from = moment(from).format("YYYY/MM/DD");
-                data.to = moment(to).format("YYYY/MM/DD");
-
                 if (!req.xhr) {
                     res.render("table_view.jade", data);
                 } else {
@@ -98,40 +97,41 @@ exports.on = function (providers) {
                 post.likes = [];
                 post.date = new Date();
                 post.user = "" + req.user.email;
+                post.sessionId = new ObjectID(req.params.sessionId);
 
                 postProvider.insert(post, function (err, docs) {
-                    res.redirect(redirectUrl);
+                    res.redirect(redirectUrl + "/" + req.params.sessionId);
                 });
             };
         },
         like = function (req, res) {
             postProvider.like(req.params.postId, req.user, function (err, docs) {
-                res.redirect("/posts/today");
+                res.redirect("/post/"+req.params.sessionId);
             });
         },
         dislike = function (req, res) {
             postProvider.dislike(req.params.postId, req.user, function (err, docs) {
-                res.redirect("/posts/today");
+                res.redirect("/post/" + req.params.sessionId);
             });
         },
-        clearToday = function(req, res){
-            postProvider.clearToday(function(){
-                res.redirect("/posts/today");
+        clearSession = function (req, res) {
+            postProvider.clearSession(req.params.sessionId, function () {
+                res.redirect("/post/" + req.params.sessionId);
             });
         };
 
     return function (router) {
-        router.get("/", a.isAuthenticated, listToday);
-        router.get("/posts/today", a.isAuthenticated, listToday);
-        router.get("/nostyle", a.isAuthenticated, nostyle);
-        router.get("/posts/table_view", a.isAuthenticated, tableView);
-        router.post("/post", a.isAuthenticated, newPostF('/posts/today'));
-        router.post("/post/nostyle", a.isAuthenticated, newPostF('/nostyle'));
 
-        router.get("/post/like/:postId", a.isAuthenticated, like);
-        router.get("/post/dislike/:postId", a.isAuthenticated, dislike);
+        router.get("/post/:sessionId", a.isAuthenticated, listSession);
+        router.get("/nostyle/:sessionId", a.isAuthenticated, nostyle);
+        router.get("/post/table-view/:sessionId", a.isAuthenticated, tableView);
+        router.post("/post/:sessionId", a.isAuthenticated, newPostF('/post'));
+        router.post("/post/nostyle/:sessionId", a.isAuthenticated, newPostF('/nostyle'));
+
+        router.get("/post/like/:postId/:sessionId", a.isAuthenticated, like);
+        router.get("/post/dislike/:postId/:sessionId", a.isAuthenticated, dislike);
 
         //admin functions
-        router.get("/posts/clear-today", a.hasRole("admin"), clearToday);
+        router.get("/post/clear-session/:sessionId", a.hasRole("admin"), clearSession);
     };
 };

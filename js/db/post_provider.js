@@ -7,8 +7,8 @@ var ObjectID = require('mongodb').ObjectID,
 exports.PostProvider = function (db) {
 
     return {
-        retrieve:function (from, to, callback) {
-            db.post.find({date:{$gte:from.toDate(), $lte:to.toDate()}}, callback);
+        retrieve:function (sessionId, callback) {
+            db.post.find({sessionId: new ObjectID(sessionId) }, callback);
         },
         insert:function (post, callback) {
             db.post.insert(post, callback);
@@ -19,10 +19,8 @@ exports.PostProvider = function (db) {
         dislike: function(postId, user, callback){
             db.post.update({_id: new ObjectID(postId), user : {$ne: user.email}}, {$addToSet: {dislikes: user.email} }, callback);
         },
-        clearToday: function(callback){
-            var from = moment().sod(),
-                to = moment().eod();
-            db.post.remove({date:{$gte:from.toDate(), $lte:to.toDate()}}, callback);
+        clearSession: function(sessionId, callback){
+            db.post.remove({sessionId: new ObjectID(sessionId) }, callback);
         }
     };
 };

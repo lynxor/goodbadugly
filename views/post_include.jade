@@ -5,7 +5,7 @@
       p= posto.text
 
   if user.email !== posto.user && ( ( posto.likes || [] ).indexOf(user.email) === -1) && ( ( posto.dislikes || [] ).indexOf(user.email) === -1)
-    a.btn.btn-mini(href='/post/like/#{posto._id}')
+    a.btn.btn-mini(href='/post/like/#{posto._id}/#{session._id}')
       i.icon-thumbs-up
       span Like
   if posto.likes && posto.likes.length
@@ -14,7 +14,7 @@
   br
 
   if user.email !== posto.user && ( ( posto.dislikes || [] ).indexOf(user.email) === -1) && ( ( posto.likes || [] ).indexOf(user.email) === -1)
-    a.btn.btn-mini(href='/post/dislike/#{posto._id}')
+    a.btn.btn-mini(href='/post/dislike/#{posto._id}/#{session._id}')
       i.icon-thumbs-up
       span Dislike
   if posto.dislikes && posto.dislikes.length

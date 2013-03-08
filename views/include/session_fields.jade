@@ -1,0 +1,21 @@
+.control-group
+  label.control-label Name
+  div.controls: input#name(type='text', name='session[name]', value='#{session.name}', class='validate[required')
+
+.control-group
+  label.control-label Types (comma separated)
+  div.controls: input#model(type='text', name='session[types]', class='validate[required]', value='#{session.types.join(", ")}')
+
+.control-group
+  label.control-label Users
+  div.controls
+    select#users(name='session[users]', multiple)
+      each user in users
+        if session.users.indexOf(user.email) !== -1
+          option(value='#{user.email}', selected='selected')= user.email
+        else
+          option(value='#{user.email}')= user.email
+
+.control-group
+  label.control-label End Date
+  div.controls: input#endDate(name='session[endDate]', value='#{session.endDate}')

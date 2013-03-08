@@ -7,6 +7,7 @@ var restrictedServer = require("./restrictedserver.js"),
     path = require("path"),
     users = require("./users.js"),
     posts = require("./posts.js"),
+    sessions = require("./sessions.js"),
     fs = require("fs"),
     providers = require("./providers.js"),
     jade = require("jade"),
@@ -73,6 +74,7 @@ module.exports = function (o, done) {
         users.on(providers, options.mailer)(router);
 
         posts.on(providers)(router);
+        sessions.on(database, providers)(router);
 
         done(router, database, providers, {
             mailer:options.mailer,

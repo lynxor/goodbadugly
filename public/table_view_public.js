@@ -4,7 +4,8 @@ function handleResults(html) {
 }
 
 function retrieveTable() {
-    var url = '/posts/table_view/';
+    var session = _.last((window.location.pathname).split("/")),
+        url = '/post/table-view/' + session;
 
     function success(data, textStatus, jqXHR) {
         handleResults(data.html);
@@ -14,9 +15,7 @@ function retrieveTable() {
 }
 
 $(function () {
-    if ( window.location.search === ""){
-        doPoll();
-    }
+    doPoll();
 });
 
 function doPoll() {

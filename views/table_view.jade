@@ -5,8 +5,7 @@ block title
 
 
 block content
-  include include/changedate
-
+  h2 Posts - #{session.name}
   #table_holder
     include gba_table
   script(src='/public#{asset_token}/table_view_public.js')

@@ -1,0 +1,30 @@
+extends base
+
+block title
+  title Sessions
+
+
+block content
+  h2 Sessions
+  if admin
+    a(href='/session/new') Add a new session
+  table.table.table-bordered
+    th
+      td Name
+      td Actions
+    each session in sessions
+      tr
+        td
+        td
+          span= session.name
+        td
+          a(href='/post/#{session._id}') Participate
+          span /
+          a(href='/post/table-view/#{session._id}') Table View
+          if admin
+            span /
+            a(href='/session/edit/#{session._id}') Edit
+            span /
+            a(href='/session/remove/#{session._id}', onclick='if(!confirm("Are you sure?")) return false') Remove
+
+

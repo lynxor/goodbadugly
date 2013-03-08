@@ -8,7 +8,7 @@ block content
   #table_holder
     include posts_accordion
 
-  form(action='/post', method='post')
+  form(action='/post/#{session._id}', method='post')
 
     #post_modal.modal.hide.fade(tabindex="-1", role='dialog', 'aria-labelledby'='post_modal_label', 'aria-hidden'='true')
       .modal-header

@@ -8,15 +8,16 @@ table.table.table-bordered
       each type in types
         td(scope='row', class='postcolumn')
           ul.unstyled
-            each posto in rows[type]
-              if posto
-                div.well(style='padding: 4px; margin: 3px; line-height: 10px;min-height: 10px;')
-                  dl
-                    dt(style='line-height: 15px;') #{posto.user}
-                    dd(style='line-height: 15px;')
-                      p= posto.text
-                  if posto.likes && posto.likes.length
-                    span.like Liked by #{posto.likes.join(", ")}
-                    span(style='padding-left: 15px')
-                  if posto.dislikes && posto.dislikes.length
-                    span.dislike Disliked by #{posto.dislikes.join(", ")}
+            if rows && rows[type]
+              each posto in rows[type]
+                if posto
+                  div.well(style='padding: 4px; margin: 3px; line-height: 10px;min-height: 10px;')
+                    dl
+                      dt(style='line-height: 15px;') #{posto.user}
+                      dd(style='line-height: 15px;')
+                        p= posto.text
+                    if posto.likes && posto.likes.length
+                      span.like Liked by #{posto.likes.join(", ")}
+                      span(style='padding-left: 15px')
+                    if posto.dislikes && posto.dislikes.length
+                      span.dislike Disliked by #{posto.dislikes.join(", ")}

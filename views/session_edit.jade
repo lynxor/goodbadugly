@@ -1,0 +1,11 @@
+extends base
+
+block title
+  title New Session
+
+
+block content
+  h2 Add a session
+  form(action='/session/edit/#{session._id}', method='post')
+    include include/session_fields.jade
+    input.btn.btn-primary(type='submit', value='Save')
