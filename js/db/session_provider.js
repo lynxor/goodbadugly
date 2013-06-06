@@ -10,7 +10,7 @@ exports.SessionProvider = function (db) {
             db.session.findOne({_id: new ObjectID(id)}, callback);
         },
         retrieveAll:function (user, callback) {
-            var query = {$in: {users: user.email}};
+            var query = {users: user.email};
             if(user.role.name === "admin"){
                 query = {};
             }
